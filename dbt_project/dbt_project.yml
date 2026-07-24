@@ -1,0 +1,25 @@
+name: 'labor_market_elt'
+version: '1.0.0'
+config-version: 2
+
+# This setting tells dbt where to find the connection profile
+profile: 'labor_market_profile'
+
+model-paths: ["models"]
+analysis-paths: ["analyses"]
+test-paths: ["tests"]
+seed-paths: ["seeds"]
+macro-paths: ["macros"]
+snapshot-paths: ["snapshots"]
+
+target-path: "target"
+clean-targets:
+  - "target"
+  - "dbt_packages"
+
+models:
+  labor_market_elt:
+    staging:
+      +materialized: view
+    marts:
+      +materialized: table

@@ -1,0 +1,52 @@
+version: '3.8'
+
+services:
+  postgres-db:
+    image: postgres:15-alpine
+    container_name: labor_market_pg
+    restart: always
+    environment:
+      POSTGRES_DB: labor_market
+      POSTGRES_USER: admin_user
+      POSTGRES_PASSWORD: admin_password_998
+    ports:
+      - "5432:5432"
+    volumes:
+      - pg_data:/var/lib/postgresql/data
+      - ./db/init_raw.sql:/docker-entrypoint-initdb.d/init.sql
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U admin_user -d labor_market"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  streamlit-dashboard:
+    build: .
+    container_name: streamlit_app
+    ports:
+      - "8501:8501"
+    environment:
+      - DB_HOST=postgres-db
+      - DB_NAME=labor_market
+      - DB_USER=admin_user
+      - DB_PASSWORD=admin_password_998
+      - PREFECT_API_URL=http://prefect-server:4200/api
+    volumes:
+      - .:/app
+    depends_on:
+      postgres-db:
+        condition: service_healthy
+
+  prefect-server:
+    image: prefecthq/prefect:2.10-python3.10
+    container_name: prefect_server
+    entrypoint: ["prefect", "server", "start", "--host", "0.0.0.0"]
+    ports:
+      - "4200:4200"
+    environment:
+      - PREFECT_API_URL=http://localhost:4200/api
+    depends_on:
+      - postgres-db
+
+volumes:
+  pg_data:

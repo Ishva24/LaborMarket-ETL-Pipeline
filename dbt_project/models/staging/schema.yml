@@ -1,0 +1,31 @@
+version: 2
+
+sources:
+  - name: raw
+    schema: raw
+    tables:
+      - name: raw_jobs
+      - name: temp_job_skills
+
+models:
+  - name: stg_jobs
+    description: "Staged and cleaned job postings data with standardized column formats."
+    columns:
+      - name: job_id
+        description: "Primary key for the job posting."
+        tests:
+          - unique
+          - not_null
+      - name: title
+        tests:
+          - not_null
+
+  - name: stg_skills
+    description: "Staged raw skill records mapped from raw job descriptions."
+    columns:
+      - name: job_id
+        tests:
+          - not_null
+      - name: skill_name
+        tests:
+          - not_null

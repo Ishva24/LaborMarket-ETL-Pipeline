@@ -1,0 +1,46 @@
+# Python
+.venv/
+venv/
+__pycache__/
+*.py[cod]
+*.pyo
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+
+# Environment
+.env
+.env.*
+!.env.example
+
+# Data outputs
+data/raw/
+data/processed/
+data/quality/
+*.csv
+*.parquet
+*.jsonl
+
+# dbt generated artifacts
+dbt_project/target/
+dbt_project/dbt_packages/
+dbt_project/logs/
+dbt_project/.user.yml
+
+# Logs
+*.log
+logs/
+
+# OS and editor
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+
+# Local database files
+*.db
+*.sqlite
+*.sqlite3
+db/pg_data/
+db/pg_dist/
+db/pg_log.txt

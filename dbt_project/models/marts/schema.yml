@@ -1,0 +1,75 @@
+version: 2
+
+models:
+  - name: dim_companies
+    description: "Dimension table containing distinct hiring companies."
+    columns:
+      - name: company_key
+        tests:
+          - unique
+          - not_null
+      - name: company_name
+        tests:
+          - not_null
+
+  - name: dim_locations
+    description: "Dimension table containing distinct job locations (city, state, country)."
+    columns:
+      - name: location_key
+        tests:
+          - unique
+          - not_null
+
+  - name: dim_skills
+    description: "Dimension table containing standardized tech skills parsed from job descriptions."
+    columns:
+      - name: skill_key
+        tests:
+          - unique
+          - not_null
+      - name: skill_name
+        tests:
+          - not_null
+          - unique
+
+  - name: fct_jobs
+    description: "Fact table containing job postings, normalized salary bands, and keys linking to company and location dimensions."
+    columns:
+      - name: job_key
+        tests:
+          - unique
+          - not_null
+      - name: company_key
+        tests:
+          - not_null
+          - relationships:
+              to: ref('dim_companies')
+              field: company_key
+      - name: location_key
+        tests:
+          - not_null
+          - relationships:
+              to: ref('dim_locations')
+              field: location_key
+      - name: salary_min
+        tests:
+          - not_null
+      - name: salary_max
+        tests:
+          - not_null
+
+  - name: bridge_job_skills
+    description: "Junction table mapping job fact keys to skill dimension keys."
+    columns:
+      - name: job_key
+        tests:
+          - not_null
+          - relationships:
+              to: ref('fct_jobs')
+              field: job_key
+      - name: skill_key
+        tests:
+          - not_null
+          - relationships:
+              to: ref('dim_skills')
+              field: skill_key

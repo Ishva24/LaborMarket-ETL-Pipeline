@@ -1,0 +1,12 @@
+labor_market_profile:
+  outputs:
+    dev:
+      type: postgres
+      host: "{{ env_var('DB_HOST', 'localhost') }}"
+      port: 5432
+      user: "{{ env_var('DB_USER', 'admin_user') }}"
+      password: "{{ env_var('DB_PASSWORD', 'admin_password_998') }}"
+      dbname: "{{ env_var('DB_NAME', 'labor_market') }}"
+      schema: analytics
+      threads: 4
+  target: dev
